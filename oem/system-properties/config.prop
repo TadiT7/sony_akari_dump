@@ -1,0 +1,9 @@
+######################## Customized property values #########################
+ro.nfc.icon.enable=true
+ro.semc.ecclist.num=1
+ro.semc.ecclist.number.0=112
+ro.product.locale=fr-FR
+ro.telephony.default_network=9
+ro.cst.prm=1313-2478:R15A
+#############################################################################
+

@@ -1,0 +1,61 @@
+# Copyright (c) 2017, 2018 Sony Mobile Communications Inc.
+#
+# product common configuration
+#
+
+service touch_id /vendor/bin/sh /vendor/bin/touch_id.sh
+    group system
+    user system
+    disabled
+    oneshot
+    seclabel u:r:touch_id:s0
+
+on early-init
+    insmod /vendor/lib/modules/${ro.np.nfc.ko}.ko
+
+on post-fs-data
+    start touch_id
+
+on early-boot && property:sys.touch_id=3
+    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules/ \
+        clearpad_rmi_dev clearpad_core clearpad_i2c
+
+on boot
+   write sys/devices/virtual/input/clearpad/post_probe_start 1
+
+# Cover mode
+    chown system system /sys/devices/virtual/input/clearpad/cover_mode_enabled
+    chown system system /sys/devices/virtual/input/clearpad/cover_win_bottom
+    chown system system /sys/devices/virtual/input/clearpad/cover_win_left
+    chown system system /sys/devices/virtual/input/clearpad/cover_win_right
+    chown system system /sys/devices/virtual/input/clearpad/cover_win_top
+
+# Debug config for clearpad
+    chown system system /sys/kernel/debug/clearpad/hwtest
+    chmod 0600 /sys/kernel/debug/clearpad/hwtest
+    restorecon /sys/kernel/debug/clearpad/hwtest
+
+on boot && property:sys.touch_id=7
+    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules/ \
+        synaptics_tcm_i2c synaptics_tcm_core synaptics_tcm_touch \
+        synaptics_tcm_device synaptics_tcm_testing synaptics_tcm_reflash \
+        synaptics_tcm_recovery synaptics_tcm_diagnostics
+
+# Touch
+on property:dev.bootcomplete=1 && property:persist.sys.touch.cover_mode_enabled=*
+    write /sys/bus/platform/devices/synaptics_tcm.0/synaptics_tcm/cover_mode_enabled ${persist.sys.touch.cover_mode_enabled}
+
+on property:sys.cover_state=* && property:sys.touch_id=3
+    write /sys/devices/virtual/input/clearpad/cover_status ${sys.cover_state}
+on property:dev.bootcomplete=1 && property:sys.cover_state=* && property:sys.touch_id=7
+    write /sys/bus/platform/devices/synaptics_tcm.0/synaptics_tcm/dynamic_config/cover_status ${sys.cover_state}
+
+on property:sys.smartstamina.touchreport=* && property:sys.touch_id=3
+   write /sys/devices/virtual/input/clearpad/stamina_mode ${sys.smartstamina.touchreport}
+on property:dev.bootcomplete=1 && property:sys.smartstamina.touchreport=* && property:sys.touch_id=7
+   write /sys/bus/platform/devices/synaptics_tcm.0/synaptics_tcm/dynamic_config/stamina ${sys.smartstamina.touchreport}
+
+on property:persist.sys.touch.glove_mode=* && property:sys.touch_id=3
+    write /sys/devices/virtual/input/clearpad/glove ${persist.sys.touch.glove_mode}
+on property:dev.bootcomplete=1 && property:persist.sys.touch.glove_mode=* && property:sys.touch_id=7
+    write /sys/bus/platform/devices/synaptics_tcm.0/synaptics_tcm/dynamic_config/glove ${persist.sys.touch.glove_mode}

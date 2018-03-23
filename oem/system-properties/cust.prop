@@ -1,0 +1,22 @@
+ro.build.description=H8216-user 8.0.0 51.1.A.2.183 619859015 release-keys
+
+ro.product.brand=Sony
+ro.vendor.product.brand=Sony
+ro.product.name=H8216
+ro.vendor.product.name=H8216
+ro.product.device=H8216
+ro.vendor.product.device=H8216
+ro.build.version.incremental=619859015
+ro.build.tags=release-keys
+ro.build.fingerprint=Sony/H8216/H8216:8.0.0/51.1.A.2.183/619859015:user/release-keys
+ro.vendor.build.fingerprint=Sony/H8216/H8216:8.0.0/51.1.A.2.183/619859015:user/release-keys
+ro.bootimage.build.fingerprint=Sony/H8216/H8216:8.0.0/51.1.A.2.183/619859015:user/release-keys
+ro.build.thumbprint=8.0.0/51.1.A.2.183/619859015:user/release-keys
+
+######################## Customized property values #########################
+ro.semc.version.cust=1313-2478
+ro.semc.version.cust_revision=R15A
+ro.somc.customerid=324
+ro.oem.key1=1313-2478
+#############################################################################
+
